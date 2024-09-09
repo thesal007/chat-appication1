@@ -7,28 +7,27 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-			"IItem": {
+			"IMessage": {
 				"properties": {
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"name": {
+					"from": {
 						"type": "string"
 					},
-					"category": {
+					"to": {
 						"type": "string"
 					},
-					"price": {
-						"type": "number",
-						"format": "double"
+					"message": {
+						"type": "string"
+					},
+					"timestamp": {
+						"type": "string",
+						"format": "date-time"
 					}
 				},
 				"required": [
-					"id",
-					"name",
-					"category",
-					"price"
+					"from",
+					"to",
+					"message",
+					"timestamp"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -45,9 +44,43 @@
 		"contact": {}
 	},
 	"paths": {
-		"/v1/products": {
+		"/users/status": {
+			"post": {
+				"operationId": "UpdateStatus",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"online": {
+										"type": "boolean"
+									},
+									"username": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"online",
+									"username"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users/active": {
 			"get": {
-				"operationId": "GetAllProducts",
+				"operationId": "GetActiveUsers",
 				"responses": {
 					"200": {
 						"description": "Ok",
@@ -55,7 +88,7 @@
 							"application/json": {
 								"schema": {
 									"items": {
-										"$ref": "#/components/schemas/IItem"
+										"type": "string"
 									},
 									"type": "array"
 								}
@@ -65,6 +98,80 @@
 				},
 				"security": [],
 				"parameters": []
+			}
+		},
+		"/messages": {
+			"post": {
+				"operationId": "SendMessage",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IMessage"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"message": {
+										"type": "string"
+									},
+									"to": {
+										"type": "string"
+									},
+									"from": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"message",
+									"to",
+									"from"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "GetMessages",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/IMessage"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "userId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
 			}
 		}
 	},

@@ -10,7 +10,6 @@ const Home: NextPage = () => {
         <meta name="description" content="A simple chat application" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
       <main>
         <Chat />
       </main>
